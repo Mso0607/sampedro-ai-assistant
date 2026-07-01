@@ -13,7 +13,866 @@
       --panel: #ffffff;
       --blue: #1d6fb8;
       --teal: #1f8a83;
+      --green: #34875a;<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sampedro AI Assistant - Soporte I+D+i</title>
+  <style>
+    :root {
+      --ink: #16212f;
+      --muted: #5c6876;
+      --line: #d8dde5;
+      --soft: #f4f7fb;
+      --panel: #ffffff;
+      --blue: #1d6fb8;
+      --teal: #1f8a83;
       --green: #34875a;
+      --amber: #b26a00;
+      --violet: #6b5ca5;
+      --red: #b33b3b;
+      --shadow: 0 18px 45px rgba(22, 33, 47, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: #eef3f7;
+    }
+
+    button, input, textarea {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 284px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background: #101b28;
+      color: #eef5fb;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #e8f4ff 0%, #69c6c0 48%, #1d6fb8 100%);
+      display: grid;
+      place-items: center;
+      color: #101b28;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.1;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: #b8c5d2;
+      font-size: 12px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav button {
+      width: 100%;
+      min-height: 42px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: #cbd7e3;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .nav button.active,
+    .nav button:hover {
+      background: rgba(255, 255, 255, 0.09);
+      color: #ffffff;
+    }
+
+    .icon {
+      min-width: 42px;
+      height: 22px;
+      flex: 0 0 42px;
+      display: inline-grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #101b28;
+      background: #dceefa;
+      border-radius: 999px;
+    }
+
+    .sidebar-note {
+      margin-top: auto;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      padding-top: 18px;
+      color: #b8c5d2;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      min-height: 74px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 28px;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .topbar p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .content {
+      padding: 24px 28px 30px;
+      overflow: auto;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .assistant-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .workbench,
+    .side-panel,
+    .presentation-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .workbench {
+      min-height: 650px;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+
+    .workbench-header {
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .workbench-header h3,
+    .side-panel h3,
+    .presentation-panel h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .scope-select {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      min-height: 36px;
+      padding: 6px 10px;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .chat {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      overflow: auto;
+    }
+
+    .message {
+      max-width: 88%;
+      border-radius: 8px;
+      padding: 12px 14px;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: #dceefa;
+      border: 1px solid #b8d8ef;
+    }
+
+    .message.bot {
+      align-self: flex-start;
+      background: #f6f8fb;
+      border: 1px solid var(--line);
+    }
+
+    .message strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .sources {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .source-tag {
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      padding: 4px 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .composer {
+      border-top: 1px solid var(--line);
+      padding: 14px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 46px;
+      gap: 10px;
+      background: #ffffff;
+      border-radius: 0 0 8px 8px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 48px;
+      max-height: 150px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .send {
+      border: 0;
+      border-radius: 6px;
+      background: var(--blue);
+      color: #fff;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      min-height: 48px;
+    }
+
+    .send:hover {
+      background: #155b98;
+    }
+
+    .side-panel {
+      padding: 18px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .example-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .example {
+      border: 1px solid var(--line);
+      background: #ffffff;
+      border-radius: 6px;
+      padding: 12px;
+      cursor: pointer;
+      text-align: left;
+      color: var(--ink);
+      line-height: 1.35;
+    }
+
+    .example:hover {
+      border-color: #9dc6e4;
+      background: #f7fbff;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px;
+      background: var(--soft);
+    }
+
+    .metric b {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 3px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .kb {
+      display: grid;
+      gap: 14px;
+    }
+
+    .kb-item {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .kb-item h3 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .kb-item p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .area {
+      width: fit-content;
+      border-radius: 999px;
+      padding: 5px 9px;
+      color: #ffffff;
+      font-size: 12px;
+    }
+
+    .area.producto { background: var(--blue); }
+    .area.logistica { background: var(--teal); }
+    .area.regulatorio { background: var(--green); }
+    .area.comercial { background: var(--amber); }
+    .area.compras { background: var(--violet); }
+    .area.calidad { background: var(--red); }
+
+    .presentation-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .presentation-panel {
+      padding: 18px;
+      min-height: 190px;
+    }
+
+    .presentation-panel p,
+    .presentation-panel li {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .presentation-panel ul {
+      margin: 10px 0 0;
+      padding-left: 18px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .flow div {
+      min-height: 88px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    @media (max-width: 980px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        padding: 14px 18px;
+      }
+
+      .nav {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .sidebar-note {
+        display: none;
+      }
+
+      .assistant-layout,
+      .presentation-grid,
+      .flow {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px;
+      }
+
+      .content {
+        padding: 16px;
+      }
+
+      .message {
+        max-width: 100%;
+      }
+
+      .nav button {
+        justify-content: center;
+        padding: 10px 8px;
+      }
+
+      .nav span:last-child {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">AI</div>
+        <div>
+          <h1>Sampedro AI Assistant</h1>
+          <p>Asistente interno de I+D+i</p>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Vistas">
+        <button class="active" data-view="assistant">
+          <span class="icon">Chat</span>
+          <span>Asistente</span>
+        </button>
+        <button data-view="knowledge">
+          <span class="icon">Base</span>
+          <span>Base técnica</span>
+        </button>
+        <button data-view="presentation">
+          <span class="icon">Info</span>
+          <span>Presentación</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-note">
+        Herramienta conceptual basada en IA para responder solicitudes recurrentes de logística, comercial, compras, regulatorio, calidad y otras áreas que consultan a I+D+i.
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <h2 id="view-title">Asistente de consultas técnicas</h2>
+          <p id="view-subtitle">Responde preguntas frecuentes con trazabilidad a fuentes internas simuladas.</p>
+        </div>
+        <div class="status">
+          <span class="pill">Base local</span>
+          <span class="pill">Trazabilidad</span>
+          <span class="pill">Respuesta inmediata</span>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="view active" id="assistant">
+          <div class="assistant-layout">
+            <section class="workbench" aria-label="Chat">
+              <div class="workbench-header">
+                <h3>Consulta interna</h3>
+                <select class="scope-select" id="scope">
+                  <option value="todas">Todas las áreas</option>
+                  <option value="producto">Producto</option>
+                  <option value="logistica">Logística</option>
+                  <option value="compras">Compras</option>
+                  <option value="regulatorio">Regulatorio</option>
+                  <option value="comercial">Comercial</option>
+                  <option value="calidad">Calidad</option>
+                </select>
+              </div>
+
+              <div class="chat" id="chat">
+                <div class="message bot">
+                  <strong>Sampedro AI Assistant</strong>
+                  Escriba una consulta sobre implantes, instrumental quirúrgico, configuraciones, compatibilidades, materiales, normas técnicas o documentación regulatoria. También puede usar los ejemplos del panel derecho.
+                </div>
+              </div>
+
+              <form class="composer" id="composer">
+                <textarea id="question" placeholder="Ejemplo: ¿Qué implante se usa para una fractura de Jones?"></textarea>
+                <button class="send" type="submit" title="Enviar consulta">></button>
+              </form>
+            </section>
+
+            <aside class="side-panel">
+              <div>
+                <h3>Preguntas de ejemplo</h3>
+                <div class="example-list" id="examples"></div>
+              </div>
+
+              <div>
+                <h3>Impacto esperado</h3>
+                <div class="metric-grid">
+                  <div class="metric">
+                    <b>40%</b>
+                    <span>menos consultas repetitivas a I+D+i</span>
+                  </div>
+                  <div class="metric">
+                    <b>24/7</b>
+                    <span>acceso a información técnica estándar</span>
+                  </div>
+                  <div class="metric">
+                    <b>7</b>
+                    <span>áreas atendidas en el flujo inicial</span>
+                  </div>
+                  <div class="metric">
+                    <b>100%</b>
+                    <span>respuestas con referencia documental</span>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="view" id="knowledge">
+          <div class="kb" id="kb"></div>
+        </div>
+
+        <div class="view" id="presentation">
+          <div class="presentation-grid">
+            <section class="presentation-panel">
+              <h3>Problema</h3>
+              <p>El área de I+D+i recibe solicitudes frecuentes de información técnica desde comercial, logística, compras, regulatorio, calidad, producción y servicio técnico. Muchas preguntas son repetitivas y consumen tiempo que podría dedicarse a desarrollo de producto, validación y mejora de sistemas.</p>
+            </section>
+
+            <section class="presentation-panel">
+              <h3>Herramienta desarrollada</h3>
+              <p>Sampedro AI Assistant es un asistente virtual interno que consulta documentación corporativa validada para entregar respuestas rápidas, precisas y consistentes a los usuarios.</p>
+            </section>
+
+            <section class="presentation-panel">
+              <h3>Tecnología sugerida</h3>
+              <p>La solución puede implementarse con un modelo de lenguaje integrado a una base documental mediante arquitectura RAG, de modo que las respuestas se generen a partir de información validada por la compañía.</p>
+            </section>
+
+            <section class="presentation-panel">
+              <h3>Funcionalidades</h3>
+              <ul>
+                <li>Consulta por lenguaje natural.</li>
+                <li>Búsqueda en fichas técnicas, catálogos, manuales y expedientes.</li>
+                <li>Identificación de compatibilidades entre placas, tornillos e instrumental.</li>
+                <li>Consulta de materiales, normas y documentación regulatoria.</li>
+                <li>Citación de la fuente documental utilizada.</li>
+              </ul>
+            </section>
+
+            <section class="presentation-panel">
+              <h3>Ejemplos de uso</h3>
+              <ul>
+                <li>Comercial: implante indicado para una fractura de Jones.</li>
+                <li>Regulatorio: clasificación INVIMA y normas aplicables al sistema de pie.</li>
+                <li>Logística: etapa del cronograma y presupuesto de fabricación de prototipos.</li>
+                <li>Compras/Calidad: material y normas técnicas de los implantes.</li>
+              </ul>
+            </section>
+          </div>
+
+          <section class="presentation-panel" style="margin-top:16px;">
+            <h3>Flujo operativo propuesto</h3>
+            <div class="flow">
+              <div><strong>1. Solicitud</strong><br>El área usuaria escribe su pregunta en lenguaje natural.</div>
+              <div><strong>2. Búsqueda</strong><br>La herramienta consulta la base técnica validada.</div>
+              <div><strong>3. Respuesta</strong><br>Entrega síntesis, fuentes y acción recomendada.</div>
+              <div><strong>4. Escalamiento</strong><br>Deriva a I+D+i cuando falta información o existe riesgo técnico.</div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const knowledge = [
+      {
+        area: "comercial",
+        title: "Implante indicado para fractura de Jones",
+        source: "Ficha técnica del producto - Placa anatómica de quinto metatarsiano",
+        keywords: ["jones", "fractura", "quinto", "metatarsiano", "placa", "implante", "comercial", "servicio tecnico"],
+        answer: "Para una fractura de Jones se utiliza la placa anatómica de quinto metatarsiano. Esta placa está diseñada para el tratamiento de fracturas del quinto metatarsiano y permite orientar la consulta comercial hacia la referencia específica del sistema de pie."
+      },
+      {
+        area: "comercial",
+        title: "Compatibilidad de placa Lisfranc",
+        source: "Catálogo sistema de pie SP-CAT-01",
+        keywords: ["lisfranc", "tornillo", "tornillos", "compatible", "compatibles", "placa", "comercial", "bloqueado", "cortical"],
+        answer: "La placa Lisfranc es compatible con tornillos bloqueados de 2,7 mm y tornillos corticales no bloqueados de 2,7 mm, según la configuración del sistema."
+      },
+      {
+        area: "logistica",
+        title: "Referencias que conforman el sistema de pie",
+        source: "Listado maestro de producto LMP-PIE-03",
+        keywords: ["sistema de pie", "pie", "referencias", "familias", "logistica", "placas", "tornillos", "instrumental"],
+        answer: "El sistema de pie está compuesto por seis familias de placas, tres familias de tornillos y un set de instrumental quirúrgico."
+      },
+      {
+        area: "regulatorio",
+        title: "Clasificación INVIMA y normas aplicables",
+        source: "Expediente técnico del proyecto - Sistema de osteosíntesis para pie",
+        keywords: ["invima", "clasificacion", "clase", "iib", "normas", "iso", "astm", "regulatorio", "sistema de pie", "decreto"],
+        answer: "El sistema de pie se clasifica como dispositivo médico implantable clase IIb. Las normas y referentes aplicables incluyen ISO 13485, ISO 14971, ASTM F382, ASTM F543, ISO 10993 y el Decreto 4725 de 2005."
+      },
+      {
+        area: "logistica",
+        title: "Cronograma y presupuesto de prototipos",
+        source: "Cronograma de ejecución y presupuesto general del proyecto",
+        keywords: ["cronograma", "prototipos", "fabricacion", "meses", "mes", "presupuesto", "costo", "logistica", "30000000"],
+        answer: "La fabricación de prototipos está programada para los meses 5 y 6 del cronograma de ejecución. El presupuesto estimado para esta etapa es de $30.000.000 COP."
+      },
+      {
+        area: "compras",
+        title: "Material de placas del sistema",
+        source: "Ficha técnica de materiales - Sistema de pie",
+        keywords: ["material", "placas", "titanio", "ti-6al-4v", "eli", "astm", "f136", "compras", "aleacion"],
+        answer: "Las placas del sistema se fabrican en aleación de titanio Ti-6Al-4V ELI conforme a ASTM F136, material utilizado comúnmente en implantes por su biocompatibilidad y resistencia mecánica."
+      },
+      {
+        area: "calidad",
+        title: "Validación mecánica de placas óseas",
+        source: "Matriz normativa del proyecto - Ensayos de verificación y validación",
+        keywords: ["validacion", "mecanica", "placas", "oseas", "astm", "f382", "calidad", "ensayo", "verificacion"],
+        answer: "La validación mecánica de placas óseas debe realizarse conforme a ASTM F382. Esta norma se usa como referencia para evaluar el comportamiento mecánico de placas empleadas en osteosíntesis."
+      },
+      {
+        area: "regulatorio",
+        title: "Documentación técnica disponible",
+        source: "Dossier técnico DT-REG-02",
+        keywords: ["documentacion", "regulatoria", "dossier", "ficha tecnica", "manual", "procedimiento", "expediente", "registro"],
+        answer: "Para solicitudes regulatorias se puede consultar ficha técnica, catálogos, manuales, procedimientos, expedientes técnicos, uso previsto, descripción de materiales, planos liberados y trazabilidad de cambios."
+      },
+      {
+        area: "producto",
+        title: "Base documental del sistema de pie",
+        source: "Artículo Parte 2 - Secciones 3.1, 3.2 y 3.3",
+        keywords: ["base", "documental", "rag", "fuentes", "fichas", "ifu", "catalogos", "procedimientos", "producto"],
+        answer: "La base documental del asistente se alimenta con fichas técnicas, catálogos, instrucciones de uso, expedientes técnicos, procedimientos internos, especificaciones de materiales, normas técnicas y documentación regulatoria vigente."
+      },
+      {
+        area: "producto",
+        title: "Escalamiento a I+D+i",
+        source: "Flujo de trabajo interno del Sampedro AI Assistant",
+        keywords: ["escalar", "escalamiento", "no encuentra", "criterio tecnico", "id", "i+d+i", "duda", "consulta"],
+        answer: "Cuando la herramienta no encuentra información suficiente en la base documental o la consulta requiere criterio técnico especializado, debe informar la limitación y recomendar el escalamiento al área de I+D+i."
+      }
+    ];
+
+    const examples = [
+      "¿Qué implante se usa para una fractura de Jones?",
+      "¿Cuál es la clasificación INVIMA del sistema de pie y qué normas aplican?",
+      "¿En qué etapa del cronograma está la fabricación de prototipos?",
+      "¿Cuál es el material utilizado para fabricar las placas del sistema?",
+      "¿Qué norma aplica para la validación mecánica de placas óseas?",
+      "¿Qué tornillos son compatibles con la placa Lisfranc?",
+      "¿Cuántas referencias conforman el sistema de pie?",
+      "¿Qué documentación técnica puede consultar regulatorio?"
+    ];
+
+    const titles = {
+      assistant: ["Asistente de consultas técnicas", "Responde preguntas frecuentes con trazabilidad a fuentes internas simuladas."],
+      knowledge: ["Base técnica", "Conocimiento inicial usado por el asistente para responder."],
+      presentation: ["Presentación de la herramienta", "Resumen ejecutivo y ejemplos de funcionalidad para socializar la solución."]
+    };
+
+    const normalize = (text) => text
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+    function scoreEntry(entry, question, scope) {
+      if (scope !== "todas" && entry.area !== scope) return -1;
+      const text = normalize(question);
+      return entry.keywords.reduce((score, keyword) => score + (text.includes(keyword) ? 1 : 0), 0);
+    }
+
+    function findAnswer(question, scope) {
+      const ranked = knowledge
+        .map((entry) => ({ entry, score: scoreEntry(entry, question, scope) }))
+        .filter((item) => item.score >= 0)
+        .sort((a, b) => b.score - a.score);
+
+      const best = ranked[0];
+      if (!best || best.score === 0) {
+        return {
+          answer: "No encontré una coincidencia suficiente en la base documental disponible. Recomendación: registrar la solicitud con área solicitante, producto o referencia, contexto de uso y urgencia. Luego debe escalarse a I+D+i para validar la respuesta antes de comunicarla.",
+          sources: ["Sin fuente documental validada - escalar a I+D+i"]
+        };
+      }
+
+      const related = ranked.filter((item) => item.score > 0).slice(0, 2);
+      return {
+        answer: best.entry.answer,
+        sources: related.map((item) => item.entry.source)
+      };
+    }
+
+    function addMessage(type, html) {
+      const chat = document.getElementById("chat");
+      const message = document.createElement("div");
+      message.className = `message ${type}`;
+      message.innerHTML = html;
+      chat.appendChild(message);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function ask(question) {
+      const scope = document.getElementById("scope").value;
+      addMessage("user", question.replace(/</g, "&lt;"));
+      const result = findAnswer(question, scope);
+      const sources = result.sources.map((source) => `<span class="source-tag">${source}</span>`).join("");
+      addMessage("bot", `<strong>Sampedro AI Assistant</strong>${result.answer}<div class="sources"><span class="source-tag"><b>Fuente consultada:</b></span>${sources}</div>`);
+    }
+
+    document.getElementById("composer").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const input = document.getElementById("question");
+      const question = input.value.trim();
+      if (!question) return;
+      input.value = "";
+      ask(question);
+    });
+
+    const exampleBox = document.getElementById("examples");
+    examples.forEach((example) => {
+      const button = document.createElement("button");
+      button.className = "example";
+      button.type = "button";
+      button.textContent = example;
+      button.addEventListener("click", () => ask(example));
+      exampleBox.appendChild(button);
+    });
+
+    const kb = document.getElementById("kb");
+    knowledge.forEach((entry) => {
+      const item = document.createElement("article");
+      item.className = "kb-item";
+      item.innerHTML = `
+        <span class="area ${entry.area}">${entry.area}</span>
+        <h3>${entry.title}</h3>
+        <p>${entry.answer}</p>
+        <p><strong>Fuente:</strong> ${entry.source}</p>
+      `;
+      kb.appendChild(item);
+    });
+
+    document.querySelectorAll(".nav button").forEach((button) => {
+      button.addEventListener("click", () => {
+        const view = button.dataset.view;
+        document.querySelectorAll(".nav button").forEach((item) => item.classList.remove("active"));
+        document.querySelectorAll(".view").forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        document.getElementById(view).classList.add("active");
+        document.getElementById("view-title").textContent = titles[view][0];
+        document.getElementById("view-subtitle").textContent = titles[view][1];
+      });
+    });
+  </script>
+</body>
+</html>
+
       --amber: #b26a00;
       --violet: #6b5ca5;
       --red: #b33b3b;
